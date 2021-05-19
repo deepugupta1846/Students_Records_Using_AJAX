@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    function insert()
+    {
+        var sname = document.getElementById("id_Sname").value;
+        var fname = document.getElementById("id_Fname").value;
+        var gender = document.getElementById("id_Gender").value;
+        var clas = document.getElementById("id_Clas").value;
+        var rno = document.getElementById("id_Rollno").value;
+        try{
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange=function(){
+            if(this.readyState==4 && this.status==200)
+                {
+                    alert(this.responseText);
+                    response=JSON.parse(this.responseText);
+                    if(response.response=="success")
+                    {
+                        //empty form field
+                        //append data to
+                        var newrecord = "<tr><td>"+sname+"</td><td>"+fname+"</td><td>"+gender+"</td><td>"+clas+"</td><td>"+rno+"</td></tr>";
+                        $("#tab").append(newrecord);
+                    }
+                    else
+                    alert(response.response)
+                }
+            };
+            xhttp.open("GET", "/insertdata/"+sname+"/"+fname+"/"+gender+"/"+clas+"/"+rno+"/", true);
+            xhttp.send();
+        }
+        catch(x)
+        {
+        alert(x);
+        }
+    }
+
+
+    /*function show(){
+    try
+    {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var myObj = JSON.parse(this.responseText);
+            var i;
+            var tdata="";
+                for(i=0;i < myObj.length; i++)
+                {
+                tdata = tdata+'<table>
+                    <tr>
+                        <td>myObj[i].sname</td>
+                    </tr>
+                </table>'
+                }
+                document.getElementById("tab").innerHTML = tdata;
+          }
+        };
+        xmlhttp.open("GET", "/showdata/", true);
+        xmlhttp.send();
+    }catch(ex)
+            {
+                alert(ex);
+            }
+}
+
+*/
+
+function showbyid(){
+    try
+    {
+        var id = document.getElementById("sid").value;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var myObj = JSON.parse(this.responseText);
+               document.getElementById("table").innerHTML = myObj.sname;
+          }
+        };
+        xmlhttp.open("GET", "/showdatabyid/"+id+"/", true);
+        xmlhttp.send();
+    }catch(ex)
+            {
+                alert(ex);
+            }
+}
+
+</script>
+</head>
+<body onload="show();">
+<div class="container">
+    <div class="alert alert-primary text-center">
+        <h2>Student's Records</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            {{forms}}
+            <button class="btn btn-primary" onclick="insert();">Submit</button>
+        </div>
+        <div class="col-md-4">
+            <div>
+                <table id="tab">
+
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <input type="number" placeholder="Enter Id no." id="sid"/>
+            <button class="btn btn-primary" onclick="showbyid();">Submit</button>
+            <div>
+                <div id="table">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
